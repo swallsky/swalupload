@@ -26,6 +26,7 @@
             type : "GET",
             url : server_sign_url,
             async : false, //同步读取配置信息
+            dataType : "json",
             success : function(data){
                 result = data;
             }
@@ -53,8 +54,7 @@
         now = timestamp = Date.parse(new Date()) / 1000;
         if (expire < now + 3)
         {
-            body = send_request();
-            var obj = $.parseJSON(body);
+        	var obj = send_request();
             host = obj['host'];
             policyBase64 = obj['policy'];
             accessid = obj['accessid'];
