@@ -180,8 +180,6 @@
             maxfilesize:'10mb', //充许上传的最大文件
             postButton:null, //提交按钮
             multi:false, //是否充许重复
-            browse:$(this)[0], //上传按钮
-            container:$(this).parent()[0], //上传的容器
             FilesAdded:function (file) {//添加文件
                 //todo
             },
@@ -195,28 +193,40 @@
                 alert(msg);
             }
         };
-        var opts = jQuery.extend(defaults,options);//options中如果存在defaults中的值，则覆盖defaults中的值
+        var me = this, //warp对象
+        	opts = jQuery.extend(defaults,options);//options中如果存在defaults中的值，则覆盖defaults中的值
         if(opts.serverSignUrl!=''){
             server_sign_url = opts.serverSignUrl; //获取签名地址
         }
+        var filters = {//充许上传的文件
+        		mime_types : [ //只允许上传图片和zip,rar文件
+                   { title : "Image files", extensions : "jpg,gif,png,bmp" },
+                   { title : "Zip files", extensions : "zip,rar" }
+               ],
+               max_file_size : opts.maxfilesize, //最大只能上传10mb的文件
+               prevent_duplicates : true //不允许选取重复文件
+        	},
+        	userAgent = navigator.userAgent; //取得浏览器的userAgent字符串
+        if (userAgent.indexOf("Chrome") > -1){
+        	//谷歌浏览器选择文件慢
+        	filters.mime_types = [];
+		}else{
+			filters.mime_types = [ //只允许上传图片和zip,rar文件
+				{ title : "Image files", extensions : "jpg,gif,png,bmp" },
+				{ title : "Zip files", extensions : "zip,rar" }
+			];
+		}
         //批处理多个文件上传按钮
         $(this).each(function (i,o) {
             var uploader = new plupload.Uploader({
                 runtimes: 'html5,flash,silverlight,html4', //运行环境
                 multi_selection: opts.multi, //是否可以同时上传多个文件,默认为单文件上传
-                browse_button: opts.browse, // $('#selectfiles')[0],
-                container: opts.container, //$('#container')[0],
+                browse_button:$(o)[0], //上传按钮
+                container: $(me).parent()[0], //上传容器
                 url: 'http://oss.aliyuncs.com', //提交的url,
                 flash_swf_url: opts.flash, //flash的路径
                 silverlight_xap_url: opts.silverlight,//silver的路径
-                filters: { //充许上传的文件
-                    mime_types : [ //只允许上传图片和zip,rar文件
-                        { title : "Image files", extensions : "jpg,gif,png,bmp" },
-                        { title : "Zip files", extensions : "zip,rar" }
-                    ],
-                    max_file_size : opts.maxfilesize, //最大只能上传10mb的文件
-                    prevent_duplicates : true //不允许选取重复文件
-                },
+                filters: filters, //文件过滤规则
                 init: {
                     PostInit: function() {
                         if(opts.postButton != null){
@@ -225,15 +235,20 @@
                                 return false;
                             });
                         }else{
-                            //todo
+                        	set_upload_param(uploader, '', false);
                         }
                     },
 
                     FilesAdded: function(up, files) {
-                        plupload.each(files, function(file) {//循环新增文件
+                    	//循环新增文件
+                        plupload.each(files, function(file) {
                             file.ratio = plupload.formatSize(file.size); //转换后的大小显示
                             opts.FilesAdded(file);
                         });
+                        //当没有上传按钮时 自动上传文件
+                        if(opts.postButton == null){
+                        	set_upload_param(uploader, '', false);
+                        }
                     },
 
                     BeforeUpload: function(up, file) {

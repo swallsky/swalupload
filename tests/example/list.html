@@ -15,19 +15,20 @@
 
 <br/>
 
+<ul id="file-list">
+	<li>文件1 <button>选择文件</button></li>
+	<li>文件2 <button>选择文件</button></li>
+	<li>文件3 <button>选择文件</button></li>
+	<li>文件4 <button>选择文件</button></li>
+	<li>文件5 <button>选择文件</button></li>
+</ul>
 
-<div id="container">
-    <a id="selectfiles" href="javascript:void(0);" class='btn'>选择文件</a>
-    <a id="postfiles" href="javascript:void(0);" class='btn'>开始上传</a>
-</div>
-
-<pre id="console"></pre>
 
 <p>&nbsp;</p>
-<script src="upload.js?v=1.0"></script>
+<script src="upload.js?v=1.2"></script>
 <script>
-    $('#selectfiles').alioss({
-        postButton:'#postfiles',
+    $('#file-list li button').alioss({
+        //postButton:'#postfiles',
         rename:false,
         multi:false,
         FilesAdded:function (file) {
@@ -54,7 +55,7 @@
             }
         },
         Error:function (msg) {
-            console.log(msg);
+            alert(msg);
         }
     });
 </script>
