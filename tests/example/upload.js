@@ -208,7 +208,7 @@
         	},
         	userAgent = navigator.userAgent; //取得浏览器的userAgent字符串
         if (userAgent.indexOf("Chrome") > -1){
-        	//谷歌浏览器选择文件慢
+        	//因为谷歌浏览器选择文件慢，所以只能放开文件类型选择
         	filters.mime_types = [];
 		}else{
 			filters.mime_types = [ //只允许上传图片和zip,rar文件
