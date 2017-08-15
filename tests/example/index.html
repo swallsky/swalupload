@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>plupload</title>
+    <link rel="stylesheet" type="text/css" href="../official/style.css"/>
+    <script src="https://cdn.bootcss.com/jquery/2.2.4/jquery.js"></script>
+    <script type="text/javascript" src="../../lib/plupload-2.1.2/js/plupload.full.min.js"></script>
+</head>
+<body>
+
+<h2>OSS web直传---在服务端php签名,浏览器直传</h2>
+<ol>
+    <li>基于plupload封装 </li>
+    <li>支持html5,flash,silverlight,html4 等协议上传</li>
+    <li>可以运行在PC浏览器，手机浏览器，微信</li>
+    <li>签名在服务端(php)完成, 安全可靠, 推荐使用!</li>
+    <li>显示上传进度条</li>
+    <li>可以控制上传文件的大小,允许上传文件的类型,本例子设置了，只能上传jpg,png,gif结尾和zip文件，最大大小是10M</li>
+    <li>最关键的是，让你10分钟之内就能移植到你的系统，实现以上牛逼的功能！</li>
+    <li>注意一点:bucket必须设置了Cors(Post打勾）,不然没有办法上传</li>
+    <li>注意一点:此例子默认是上传到user-dir目录下面，这个目录的设置是在php/get.php, $dir变量!</li>
+    <li><a href="https://help.aliyun.com/document_detail/oss/practice/pc_web_upload/js_php_upload.html">点击查看详细文档</a></li>
+</ol>
+<br>
+
+<h4>您所选择的文件列表：</h4>
+<div id="ossfile">你的浏览器不支持flash,Silverlight或者HTML5！</div>
+
+<br/>
+
+
+<div id="container">
+    <a id="selectfiles" href="javascript:void(0);" class='btn'>选择文件</a>
+    <a id="postfiles" href="javascript:void(0);" class='btn'>开始上传</a>
+</div>
+
+<pre id="console"></pre>
+
+<p>&nbsp;</p>
+<script src="upload.js?v=1.3"></script>
+<script>
+    $('#selectfiles').alioss({
+        postButton:'#postfiles',
+        rename:false,
+        FilesAdded:function (file) {
+            $('#ossfile').append('<div id="' + file.id + '">' + file.name + ' (' + file.ratio + ')<b></b>'
+                + '<div class="progress"><div class="progress-bar" style="width: 0%"></div></div>'
+                + '</div>');
+        },
+        UploadProgress:function (file) {
+            var d = document.getElementById(file.id);
+            d.getElementsByTagName('b')[0].innerHTML = '<span>' + file.percent + "%</span>";
+            var prog = d.getElementsByTagName('div')[0];
+            var progBar = prog.getElementsByTagName('div')[0]
+            progBar.style.width= 2*file.percent+'px';
+            progBar.setAttribute('aria-valuenow',file.percent);
+        },
+        FileUploaded:function (file,info) {
+            if (info.status == 200)
+            {
+                document.getElementById(file.id).getElementsByTagName('b')[0].innerHTML = 'upload to oss success, object name:' + file.name;
+            }
+            else
+            {
+                document.getElementById(file.id).getElementsByTagName('b')[0].innerHTML = info.response;
+            }
+        },
+        Error:function (msg) {
+            console.log(msg);
+        }
+    });
+</script>
+</body>
+</html>
