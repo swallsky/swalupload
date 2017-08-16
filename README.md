@@ -1,7 +1,7 @@
 # SwalUpload
 致力于让upload这件事变得更简单，包括文件上传到本地,oss,七牛等，目录只支持oss上传
 
-## 使用教程
+## 使用教程(aliyun oss web直传模式上传文件)
 
 ### 载入swalupload.js
 > swalupload是基于jquery(jquery版本最好在1.9以上),所以在使用前，请先引入jquery
