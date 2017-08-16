@@ -19,7 +19,7 @@
         expire = 0,//有效期参数
         g_object_name = '',
         g_object_name_type = '',
-        server_sign_url = '../php/get.php', //远程服务端签名url
+        server_sign_url = '../php/config.php', //远程服务端签名url
         now = timestamp = Date.parse(new Date()) / 1000;
     /**
      * 远程读取policy
