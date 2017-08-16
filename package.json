@@ -1,0 +1,35 @@
+{
+  "name": "swallskyupload",
+  "version": "1.0.0",
+  "description": "aliyun oss upload",
+  "main": "dist/swalupload.js",
+  "directories": {
+    "lib": "lib",
+    "test": "tests"
+  },
+  "scripts": {
+    "prod": "NODE_ENV=production webpack --config ./webpack.prod.config.js --progress",
+    "dev": "webpack --progress --colors --watch"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/swallsky/alioss.git"
+  },
+  "author": "swallsky",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/swallsky/alioss/issues"
+  },
+  "homepage": "https://github.com/swallsky/alioss#readme",
+  "devDependencies": {
+    "css-loader": "^0.28.4",
+    "html-webpack-plugin": "^2.30.1",
+    "style-loader": "^0.18.2",
+    "path": "^0.12.7",
+    "webpack": "^3.5.4"
+  },
+  "dependencies": {
+    "path": "^0.12.7",
+    "webpack": "^3.5.4"
+  }
+}

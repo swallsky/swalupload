@@ -1,5 +1,5 @@
-/vendor
 .idea
-/composer.lock
 .settings
 .buildpath
+package-lock.json
+node_modules

@@ -2,12 +2,14 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>plupload</title>
-    <link rel="stylesheet" type="text/css" href="../official/style.css"/>
+    <title><%= htmlWebpackPlugin.options.title %></title>
+    <link rel="stylesheet" type="text/css" href="../app/css/style.css"/>
     <script src="https://cdn.bootcss.com/jquery/2.2.4/jquery.js"></script>
-    <script type="text/javascript" src="../../lib/plupload-2.3.1/js/plupload.full.min.js"></script>
+    <script type="text/javascript" src="../lib/plupload-2.3.1/js/plupload.full.min.js"></script>
+	<script type="text/javascript" src="<%= htmlWebpackPlugin.files.chunks.swalupload.entry %>"></script>
 </head>
 <body>
+<h1>多文件列表上传，并且自动上传文件</h1>
 <h4>您所选择的文件列表：</h4>
 <div id="ossfile">
 	<!-- 文件显示 -->
@@ -15,18 +17,18 @@
 
 <br/>
 
+<ul id="file-list">
+	<li>文件1 <button>选择文件</button></li>
+	<li>文件2 <button>选择文件</button></li>
+	<li>文件3 <button>选择文件</button></li>
+	<li>文件4 <button>选择文件</button></li>
+	<li>文件5 <button>选择文件</button></li>
+</ul>
 
-<div id="container">
-    <a id="selectfiles" href="javascript:void(0);" class='btn'>选择文件</a>
-    <a id="postfiles" href="javascript:void(0);" class='btn'>开始上传</a>
-</div>
-
-<pre id="console"></pre>
 
 <p>&nbsp;</p>
 <script>
-    $('#selectfiles').alioss({
-        postButton:'#postfiles',
+    $('#file-list li button').swalupload({
         rename:false,
         multi:false,
         FilesAdded:function (file) {
@@ -53,7 +55,7 @@
             }
         },
         Error:function (msg) {
-            console.log(msg);
+            alert(msg);
         }
     });
 </script>
