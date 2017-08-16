@@ -1,5 +1,5 @@
 # SwalUpload
-致力于让upload这件事变得更简单，包括文件上传到本地,oss,七牛等，目录只支持oss上传
+致力于让upload这件事变得更简单，包括文件上传到本地,oss,七牛等，目前只支持oss上传
 
 ## 使用教程(aliyun oss web直传模式上传文件)
 
