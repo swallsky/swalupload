@@ -26,10 +26,7 @@
     "html-webpack-plugin": "^2.30.1",
     "style-loader": "^0.18.2",
     "path": "^0.12.7",
-    "webpack": "^3.5.4"
-  },
-  "dependencies": {
-    "path": "^0.12.7",
-    "webpack": "^3.5.4"
+    "webpack": "^3.5.4",
+    "plupload": "^2.3.2"
   }
 }

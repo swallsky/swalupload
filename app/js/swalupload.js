@@ -3,6 +3,8 @@
  * @version 0.9
  */
 (function ($) {
+    //载入plupload
+    var plupload = require('plupload');
     /**
      * 基础配置参数
      * @type {string}

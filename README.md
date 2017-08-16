@@ -1,63 +1,74 @@
 # SwalUpload
-基于
+致力于让upload变成一件非常简单的事，包括文件上传到本地,oss,七牛等
 
+## 使用教程
 
-## 开始使用
+### 载入swalupload.js
+> swalupload是基于jquery(jquery版本最好在1.9以上),所以在使用前，请先引入jquery
 
-### composer
+* 在head中加入
+```html
+    <script src="../app/js/jquery-2.2.4.js"></script>
+    <script type="text/javascript" src="../dist/swalupload.js"></script>
+```
+* 以单文件上传为例
+```html
+<!-- 文件队列显示层 -->
+<div id="ossfile"></div>
 
-- `composer require swallsky/alioss`
-
-
-### 使用方法1
-
-```php
-//require('../vendor/autoload.php'); //加载composer,一般情况下这个都是框架集成
-
-$res = SwaSky\Alisms\Send::verifyCode('手机号',mt_rand(1000,9999),[
-    'accessKeyId'   =>  '', //阿里云 acess key
-    'accessKeySecret'  => '', //阿里云 access secret
-    'signName'  =>  '', //短信签名
-    'templateCode'  =>  '', //短信模板code
-    'logfile'   =>  '' //短信异常信息日志文件信息
-]);
-if($res==0){
-    echo '发送失败!';
-}else{
-    echo '发送成功!';
-}
+<!-- 选择文件按钮和上传按钮 -->
+<div id="container">
+    <a id="selectfiles" href="javascript:void(0);" class='btn'>选择文件</a>
+    <a id="postfiles" href="javascript:void(0);" class='btn'>开始上传</a>
+</div>
+```
+* 调用swalupload上传
+```html
+<script>
+    $('#selectfiles').swalupload({
+        postButton:'#postfiles', //提交按钮，当提交按钮为空时，则为自动上传
+        rename:false, //是否需要重新命名上传文件
+        multi:false, //是否需要单次多文件上传，默认一次只能上传文件
+        FilesAdded:function (file) {//添加文件到文件队列层中
+            $('#ossfile').append('<div id="' + file.id + '">' + file.name + ' (' + file.ratio + ')<b></b>'
+                + '<div class="progress"><div class="progress-bar" style="width: 0%"></div></div>'
+                + '</div>');
+        },
+        UploadProgress:function (file) {//进度显示层
+            var d = document.getElementById(file.id);
+            d.getElementsByTagName('b')[0].innerHTML = '<span>' + file.percent + "%</span>";
+            var prog = d.getElementsByTagName('div')[0];
+            var progBar = prog.getElementsByTagName('div')[0]
+            progBar.style.width= 2*file.percent+'px';
+            progBar.setAttribute('aria-valuenow',file.percent);
+        },
+        FileUploaded:function (file,info) {//上传完成后
+            if (info.status == 200)
+            {
+                document.getElementById(file.id).getElementsByTagName('b')[0].innerHTML = 'upload to oss success, object name:' + file.name;
+            }
+            else
+            {
+                document.getElementById(file.id).getElementsByTagName('b')[0].innerHTML = info.response;
+            }
+        },
+        Error:function (msg) {//上传错误提示
+            console.log(msg);
+        }
+    });
+</script>
 ```
 
-### 使用方法2
-默认配置文件在app/config/alisms.php,可以通过设置verifyCode第三个参数改变配置信息路径
-```alisms.php
-/**
- * 短信配置信息
- */
-return [
-    'accessKeyId'   =>  env('ALI_ACCESSKEY'), //阿里云Access ID
-    'accessKeySecret'  => env('ALI_ACCESSKEYSECRET'), //阿里云Access Key
-    'signName'  =>  env('ALI_SIGNNAME'), //短信签名
-    'templateCode'  =>  env('ALI_TEMPCODE'), //短信模板code
-    'logfile'   =>  storage_path('logs/alisms-'.date('Y-m-d').'.log') //日志保存目录
-];
-```
+## 二次开发环境搭建
 
-```send.php
-//require('../vendor/autoload.php'); //加载composer,一般情况下这个都是框架集成
+### npm 安装开发环境
+> 使用npm搭建开发测试环境,如果没有安装过npm的,可以跳过,此处为了进行二次开发准备的
+- `npm install`
 
-$res = SwaSky\Alisms\Send::verifyCode('手机号',mt_rand(1000,9999));
-if($res==0){
-    echo '发送失败!';
-}else{
-    echo '发送成功!';
-}
-```
+### 生产环境部署
+> 生成压缩后的生产环境上可用的js文件
+- `npm run prod`
 
-## 获取Access ID和Access Key
-[如何获取Access ID和Access Key](https://help.aliyun.com/knowledge_detail/38738.html)
-
-## 短信相关操作
-[短信签名](https://help.aliyun.com/document_detail/55327.html?spm=5176.8195934.507901.5.KZkgsL)
-[短信模板](https://help.aliyun.com/document_detail/55330.html?spm=5176.doc55327.6.544.lhzuXh)
-
+### 开发环境部署
+> 开发目录在app下，css目录为测试样式目录、js目录为swalupload的主目录、tpls目录为测试各种应用的模板目录
+- `npm run dev`
