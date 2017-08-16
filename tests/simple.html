@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>简单实例</title>
+    <link rel="stylesheet" type="text/css" href="../app/css/style.css"/>
+    <script src="https://cdn.bootcss.com/jquery/2.2.4/jquery.js"></script>
+    <script type="text/javascript" src="../lib/plupload-2.3.1/js/plupload.full.min.js"></script>
+    <script type="text/javascript" src="../dist/swalupload.js"></script>
+</head>
+<body>
+<h1>单文件上传</h1>
+<h4>您所选择的文件列表：</h4>
+<div id="ossfile">
+    <!-- 文件显示 -->
+</div>
+
+<br/>
+
+
+<div id="container">
+    <a id="selectfiles" href="javascript:void(0);" class='btn'>选择文件</a>
+    <a id="postfiles" href="javascript:void(0);" class='btn'>开始上传</a>
+</div>
+
+<pre id="console"></pre>
+
+<p>&nbsp;</p>
+<script>
+    $('#selectfiles').swalupload({
+        postButton:'#postfiles',
+        rename:false,
+        multi:false,
+        FilesAdded:function (file) {
+            $('#ossfile').append('<div id="' + file.id + '">' + file.name + ' (' + file.ratio + ')<b></b>'
+                + '<div class="progress"><div class="progress-bar" style="width: 0%"></div></div>'
+                + '</div>');
+        },
+        UploadProgress:function (file) {
+            var d = document.getElementById(file.id);
+            d.getElementsByTagName('b')[0].innerHTML = '<span>' + file.percent + "%</span>";
+            var prog = d.getElementsByTagName('div')[0];
+            var progBar = prog.getElementsByTagName('div')[0]
+            progBar.style.width= 2*file.percent+'px';
+            progBar.setAttribute('aria-valuenow',file.percent);
+        },
+        FileUploaded:function (file,info) {
+            if (info.status == 200)
+            {
+                document.getElementById(file.id).getElementsByTagName('b')[0].innerHTML = 'upload to oss success, object name:' + file.name;
+            }
+            else
+            {
+                document.getElementById(file.id).getElementsByTagName('b')[0].innerHTML = info.response;
+            }
+        },
+        Error:function (msg) {
+            console.log(msg);
+        }
+    });
+</script>
+</body>
+</html>

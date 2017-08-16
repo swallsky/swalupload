@@ -3,13 +3,15 @@
  * @type {webpack}
  */
 var webpack = require('webpack');
+var path = require('path');
+var appdir = path.resolve(__dirname,'./app'); //应用目录
 
 module.exports = {
     entry:{
-        swalupload:__dirname+"/src/upload.js",
+        swalupload:appdir+"/js/swalupload.js",
     },
     output: {//输入文件
-        path:__dirname+"/dist", //此处输出的路径必须是绝对路径
+        path:__dirname+"/dist", //生产环境目录
         filename:'[name].js'
     },
     module: {//模块加载

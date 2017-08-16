@@ -1,3 +1,7 @@
+/**
+ * @author swallsky <xjz1688@163.com>
+ * @version 0.9
+ */
 (function ($) {
     /**
      * 基础配置参数

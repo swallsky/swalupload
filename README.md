@@ -1,5 +1,5 @@
-# AliOSS
-基于阿里云OSS(对象存储)开发web端直传工具包
+# SwalUpload
+基于
 
 
 ## 开始使用

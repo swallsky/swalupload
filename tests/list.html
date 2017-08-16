@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>多文件上传</title>
+    <link rel="stylesheet" type="text/css" href="../app/css/style.css"/>
+    <script src="https://cdn.bootcss.com/jquery/2.2.4/jquery.js"></script>
+    <script type="text/javascript" src="../lib/plupload-2.3.1/js/plupload.full.min.js"></script>
+	<script type="text/javascript" src="../dist/swalupload.js"></script>
+</head>
+<body>
+<h1>多文件列表上传，并且自动上传文件</h1>
+<h4>您所选择的文件列表：</h4>
+<div id="ossfile">
+	<!-- 文件显示 -->
+</div>
+
+<br/>
+
+<ul id="file-list">
+	<li>文件1 <button>选择文件</button></li>
+	<li>文件2 <button>选择文件</button></li>
+	<li>文件3 <button>选择文件</button></li>
+	<li>文件4 <button>选择文件</button></li>
+	<li>文件5 <button>选择文件</button></li>
+</ul>
+
+
+<p>&nbsp;</p>
+<script>
+    $('#file-list li button').swalupload({
+        rename:false,
+        multi:false,
+        FilesAdded:function (file) {
+            $('#ossfile').append('<div id="' + file.id + '">' + file.name + ' (' + file.ratio + ')<b></b>'
+                + '<div class="progress"><div class="progress-bar" style="width: 0%"></div></div>'
+                + '</div>');
+        },
+        UploadProgress:function (file) {
+            var d = document.getElementById(file.id);
+            d.getElementsByTagName('b')[0].innerHTML = '<span>' + file.percent + "%</span>";
+            var prog = d.getElementsByTagName('div')[0];
+            var progBar = prog.getElementsByTagName('div')[0]
+            progBar.style.width= 2*file.percent+'px';
+            progBar.setAttribute('aria-valuenow',file.percent);
+        },
+        FileUploaded:function (file,info) {
+            if (info.status == 200)
+            {
+                document.getElementById(file.id).getElementsByTagName('b')[0].innerHTML = 'upload to oss success, object name:' + file.name;
+            }
+            else
+            {
+                document.getElementById(file.id).getElementsByTagName('b')[0].innerHTML = info.response;
+            }
+        },
+        Error:function (msg) {
+            alert(msg);
+        }
+    });
+</script>
+</body>
+</html>
