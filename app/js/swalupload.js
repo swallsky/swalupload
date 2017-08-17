@@ -248,6 +248,7 @@
                     FilesAdded: function(up, files) {
                     	//循环新增文件
                         plupload.each(files, function(file) {
+                            file.ext = get_suffix(file.name).substring(1);//文件后缀名
                             file.ratio = plupload.formatSize(file.size); //转换后的大小显示
                             opts.FilesAdded(file);
                         });
