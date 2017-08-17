@@ -269,7 +269,6 @@
                     FileUploaded: function(up, file, info) {
                         file.ext = get_suffix(file.name).substring(1);//文件后缀名
                         file.path = get_uploaded_object_name(file.name); //上传后的文件路径
-                        console.log(file);
                         opts.FileUploaded(file,info);
                     },
 
