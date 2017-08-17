@@ -1,5 +1,6 @@
 # SwalUpload
-SwalUpload是在[Plupload](http://www.plupload.com)插件基础上做的上传小工具，致力于让upload这件事变得更简单，包括文件上传到本地,oss,七牛等，目前只支持oss上传
+SwalUpload是在[Plupload](http://www.plupload.com)插件基础上做的上传小工具，致力于让upload这件事变得更简单，包括文件上传到本地、oss、七牛等，这是一个跨语言的上传小工具。
+> 目前只支持oss上传
 
 ## 使用教程(aliyun oss web直传模式上传文件)
 
@@ -60,6 +61,12 @@ SwalUpload是在[Plupload](http://www.plupload.com)插件基础上做的上传�
 ```
 
 ## 二次开发环境搭建
+
+### 涉及到技术(技术栈)
+- [nodejs](https://nodejs.org/en/)
+- [npm](https://www.npmjs.com)
+- [webpack](http://webpack.github.io)
+- [Plupload](http://www.plupload.com)
 
 ### npm 安装开发环境
 > 使用npm搭建开发测试环境,如果没有安装过npm的,可以跳过,此处为了进行二次开发准备的
