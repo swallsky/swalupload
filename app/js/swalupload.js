@@ -267,7 +267,7 @@
                     },
 
                     FileUploaded: function(up, file, info) {
-                        file.name = get_uploaded_object_name(file.name); //上传后的文件名
+                        file.path = get_uploaded_object_name(file.name); //上传后的文件路径
                         opts.FileUploaded(file,info);
                     },
 
