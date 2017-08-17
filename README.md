@@ -1,5 +1,5 @@
 # SwalUpload
-致力于让upload这件事变得更简单，包括文件上传到本地,oss,七牛等，目前只支持oss上传
+SwalUpload是在[Plupload](http://www.plupload.com)插件基础上做的上传小工具，致力于让upload这件事变得更简单，包括文件上传到本地,oss,七牛等，目前只支持oss上传
 
 ## 使用教程(aliyun oss web直传模式上传文件)
 
@@ -72,3 +72,6 @@
 ### 开发环境部署
 > 开发目录在app下，css目录为测试样式目录、js目录为swalupload的主目录、tpls目录为测试各种应用的模板目录
 - `npm run dev`
+
+> 热编译，改动js后自动生成测试文件，避免手动生成编译文件
+- `npm run watch`

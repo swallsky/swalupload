@@ -8,8 +8,9 @@
     "test": "tests"
   },
   "scripts": {
-    "prod": "NODE_ENV=production webpack --config ./webpack.prod.config.js --progress",
-    "dev": "webpack --progress --colors --watch"
+    "dev": "NODE_ENV=development webpack --progress --colors",
+    "watch": "NODE_ENV=development webpack --progress --colors --watch",
+    "prod": "NODE_ENV=production webpack --progress --colors"
   },
   "repository": {
     "type": "git",
