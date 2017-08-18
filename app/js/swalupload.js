@@ -186,16 +186,45 @@
             maxfilesize:'10mb', //充许上传的最大文件
             postButton:null, //提交按钮
             multi:false, //是否充许重复
-            FilesAdded:function (file) {//添加文件
+            /**
+             * 文件队列显示
+             * @param file 文件
+             * @param selector 选择文件元素
+             * @param up up对象
+             * @constructor
+             */
+            FilesAdded:function (file,selector,up) {
                 //todo
             },
-            UploadProgress:function (file) {//进度显示
+            /**
+             * 进度显示
+             * @param file 文件
+             * @param selector 选择文件元素
+             * @param up up对象
+             * @constructor
+             */
+            UploadProgress:function (file,selector,up) {
                 //todo
             },
-            FileUploaded:function (file,info) { //文件上传完成后显示
+            /**
+             * 文件上传完成后显示
+             * @param file 文件
+             * @param info 服务器信息
+             * @param selector 选择文件元素
+             * @param up up对象
+             * @constructor
+             */
+            FileUploaded:function (file,info,selector,up) {
                 //todo
             },
-            Error:function (msg) { //上传错误显示
+            /**
+             * 上传错误显示
+             * @param msg 错误信息
+             * @param selector 选择文件元素
+             * @param up up对象
+             * @constructor
+             */
+            Error:function (msg,selector,up) { //
                 alert(msg);
             }
         };
@@ -227,6 +256,7 @@
             var uploader = new plupload.Uploader({
                 runtimes: 'html5,flash,silverlight,html4', //运行环境
                 multi_selection: opts.multi, //是否可以同时上传多个文件,默认为单文件上传
+                brower_target:'=2',
                 browse_button:$(o)[0], //上传按钮
                 container: $(me).parent()[0], //上传容器
                 url: 'http://oss.aliyuncs.com', //提交的url,
@@ -250,7 +280,7 @@
                         plupload.each(files, function(file) {
                             file.ext = get_suffix(file.name).substring(1);//文件后缀名
                             file.ratio = plupload.formatSize(file.size); //转换后的大小显示
-                            opts.FilesAdded(file);
+                            opts.FilesAdded(file,o,up);
                         });
                         //当没有上传按钮时 自动上传文件
                         if(opts.postButton == null){
@@ -264,28 +294,28 @@
                     },
 
                     UploadProgress: function(up, file) {
-                        opts.UploadProgress(file); //百分比显示
+                        opts.UploadProgress(file,o,up); //百分比显示
                     },
 
                     FileUploaded: function(up, file, info) {
                         file.ext = get_suffix(file.name).substring(1);//文件后缀名
                         file.path = get_uploaded_object_name(file.name); //上传后的文件路径
-                        opts.FileUploaded(file,info);
+                        opts.FileUploaded(file,info,o,up);
                     },
 
                     Error: function(up, err) {
                         if (err.code == -600) {
-                            opts.Error("选择的文件超过了"+opts.maxfilesize);
+                            opts.Error("选择的文件超过了"+opts.maxfilesize,o,up);
                         }
                         else if (err.code == -601) {
-                            opts.Error("不能上传该类型的文件");
+                            opts.Error("不能上传该类型的文件",o,up);
                         }
                         else if (err.code == -602) {
-                            opts.Error("该文件已经上传过了");
+                            opts.Error("该文件已经上传过了",o,up);
                         }
                         else
                         {
-                            opts.Error(err.response);
+                            opts.Error(err.response,o,up);
                         }
                     }
                 }

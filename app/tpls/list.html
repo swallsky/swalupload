@@ -17,11 +17,11 @@
 <br/>
 
 <ul id="file-list">
-	<li>文件1 <button>选择文件</button></li>
-	<li>文件2 <button>选择文件</button></li>
-	<li>文件3 <button>选择文件</button></li>
-	<li>文件4 <button>选择文件</button></li>
-	<li>文件5 <button>选择文件</button></li>
+	<li>文件1 <button>选择文件1</button></li>
+	<li>文件2 <button>选择文件2</button></li>
+	<li>文件3 <button>选择文件3</button></li>
+	<li>文件4 <button>选择文件4</button></li>
+	<li>文件5 <button>选择文件5</button></li>
 </ul>
 
 
@@ -30,12 +30,13 @@
     $('#file-list li button').swalupload({
         rename:false,
         multi:false,
-        FilesAdded:function (file) {
+        FilesAdded:function (file,sel,up) {
             $('#ossfile').append('<div id="' + file.id + '">' + file.name + ' (' + file.ratio + ')<b></b>'
                 + '<div class="progress"><div class="progress-bar" style="width: 0%"></div></div>'
                 + '</div>');
+            console.log(sel);
         },
-        UploadProgress:function (file) {
+        UploadProgress:function (file,sel,up) {
             var d = document.getElementById(file.id);
             d.getElementsByTagName('b')[0].innerHTML = '<span>' + file.percent + "%</span>";
             var prog = d.getElementsByTagName('div')[0];
@@ -43,7 +44,7 @@
             progBar.style.width= 2*file.percent+'px';
             progBar.setAttribute('aria-valuenow',file.percent);
         },
-        FileUploaded:function (file,info) {
+        FileUploaded:function (file,info,sel,up) {
             if (info.status == 200)
             {
                 document.getElementById(file.id).getElementsByTagName('b')[0].innerHTML = 'upload to oss success, object name:' + file.name;
@@ -53,7 +54,7 @@
                 document.getElementById(file.id).getElementsByTagName('b')[0].innerHTML = info.response;
             }
         },
-        Error:function (msg) {
+        Error:function (msg,sel,up) {
             alert(msg);
         }
     });
