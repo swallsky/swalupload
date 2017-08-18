@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title><%= htmlWebpackPlugin.options.title %></title>
+    <link rel="stylesheet" type="text/css" href="../app/css/style.css"/>
+	<script src="../app/js/jquery-2.2.4.js"></script>
+	<script type="text/javascript" src="<%= htmlWebpackPlugin.files.chunks.swalupload.entry %>"></script>
+</head>
+<body>
+<h1>单文件上传</h1>
+<h4>您所选择的文件列表：</h4>
+<div id="ossfile-simple">
+	<!-- 文件显示 -->
+</div>
+
+<br/>
+
+
+<div id="container">
+	<a id="selectfiles-simple" href="javascript:void(0);" class='btn'>选择文件</a>
+</div>
+<script>
+    $('#selectfiles-simple').swalupload({
+        rename:true,
+        multi:true,
+        FilesAdded:function (file,sel,up) {
+            $('#ossfile-simple').append('<div id="' + file.id + '">' + file.name + ' (' + file.ratio + ')<b></b>'
+                + '<div class="progress"><div class="progress-bar" style="width: 0%"></div></div>'
+                + '</div>');
+        },
+        UploadProgress:function (file,sel,up) {
+            var d = document.getElementById(file.id);
+            d.getElementsByTagName('b')[0].innerHTML = '<span>' + file.percent + "%</span>";
+            var prog = d.getElementsByTagName('div')[0];
+            var progBar = prog.getElementsByTagName('div')[0]
+            progBar.style.width= 2*file.percent+'px';
+            progBar.setAttribute('aria-valuenow',file.percent);
+        },
+        FileUploaded:function (file,info,sel,up) {
+            if (info.status == 200)
+            {
+                document.getElementById(file.id).getElementsByTagName('b')[0].innerHTML = 'upload to oss success, object name:' + file.name;
+            }
+            else
+            {
+                document.getElementById(file.id).getElementsByTagName('b')[0].innerHTML = info.response;
+            }
+        },
+        UploadComplete:function (files,sel,up) {
+            console.log('上传完成');
+        },
+        Error:function (msg,sel,up) {
+            console.log(msg);
+        }
+    });
+</script>
+
+<h1>多文件列表上传，并且自动上传文件</h1>
+<h4>您所选择的文件列表：</h4>
+<div id="ossfile">
+	<!-- 文件显示 -->
+</div>
+
+<br/>
+
+<ul id="file-list">
+	<li>文件1 <button>选择文件1</button></li>
+	<li>文件2 <button>选择文件2</button></li>
+	<li>文件3 <button>选择文件3</button></li>
+	<li>文件4 <button>选择文件4</button></li>
+	<li>文件5 <button>选择文件5</button></li>
+</ul>
+
+
+<p>&nbsp;</p>
+<script>
+    $('#file-list li button').swalupload({
+        rename:false,
+        multi:true,
+        FilesAdded:function (file,sel,up) {
+            $('#ossfile').append('<div id="' + file.id + '">' + file.name + ' (' + file.ratio + ')<b></b>'
+                + '<div class="progress"><div class="progress-bar" style="width: 0%"></div></div>'
+                + '</div>');
+            console.log(sel);
+        },
+        UploadProgress:function (file,sel,up) {
+            var d = document.getElementById(file.id);
+            d.getElementsByTagName('b')[0].innerHTML = '<span>' + file.percent + "%</span>";
+            var prog = d.getElementsByTagName('div')[0];
+            var progBar = prog.getElementsByTagName('div')[0]
+            progBar.style.width= 2*file.percent+'px';
+            progBar.setAttribute('aria-valuenow',file.percent);
+        },
+        FileUploaded:function (file,info,sel,up) {
+            if (info.status == 200)
+            {
+                document.getElementById(file.id).getElementsByTagName('b')[0].innerHTML = 'upload to oss success, object name:' + file.name;
+            }
+            else
+            {
+                document.getElementById(file.id).getElementsByTagName('b')[0].innerHTML = info.response;
+            }
+        },
+        UploadComplete:function (files,sel,up) {
+			console.log('111');
+        },
+        Error:function (msg,sel,up) {
+            alert(msg);
+        }
+    });
+</script>
+</body>
+</html>

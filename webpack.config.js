@@ -44,6 +44,12 @@ if(process.env.NODE_ENV == 'development') {//开发环境
             filename:builddir+'/list.html',
             template:appdir+'/tpls/list.html',
             inject:false //不让自动注入
+        }),
+        new HtmlWebpackPlugin({
+            title:'批量文件上传',
+            filename:builddir+'/batch.html',
+            template:appdir+'/tpls/batch.html',
+            inject:false //不让自动注入
         })
     ];
 }else{//生产环境

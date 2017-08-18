@@ -266,7 +266,6 @@
             var uploader = new plupload.Uploader({
                 runtimes: 'html5,flash,silverlight,html4', //运行环境
                 multi_selection: opts.multi, //是否可以同时上传多个文件,默认为单文件上传
-                brower_target:'=2',
                 browse_button:$(o)[0], //上传按钮
                 container: $(me).parent()[0], //上传容器
                 url: 'http://oss.aliyuncs.com', //提交的url,
