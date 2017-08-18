@@ -187,7 +187,7 @@
             postButton:null, //提交按钮
             multi:false, //是否充许重复
             /**
-             * 文件队列显示
+             * 当文件添加到上传队列后触发监听函数
              * @param file 文件
              * @param selector 选择文件元素
              * @param up up对象
@@ -197,7 +197,7 @@
                 //todo
             },
             /**
-             * 进度显示
+             * 会在文件上传过程中不断触发，可以用此事件来显示上传进度监听函数
              * @param file 文件
              * @param selector 选择文件元素
              * @param up up对象
@@ -207,7 +207,7 @@
                 //todo
             },
             /**
-             * 文件上传完成后显示
+             * 当队列中的某一个文件上传完成后触发监听函数
              * @param file 文件
              * @param info 服务器信息
              * @param selector 选择文件元素
@@ -218,7 +218,17 @@
                 //todo
             },
             /**
-             * 上传错误显示
+             * 当上传队列中所有文件都上传完成后触发监听函数
+             * @param file
+             * @param selector
+             * @param up
+             * @constructor
+             */
+            UploadComplete:function (file,selector,up) {
+                //todo
+            },
+            /**
+             * 当发生错误时触发监听函数
              * @param msg 错误信息
              * @param selector 选择文件元素
              * @param up up对象
@@ -301,6 +311,16 @@
                         file.ext = get_suffix(file.name).substring(1);//文件后缀名
                         file.path = get_uploaded_object_name(file.name); //上传后的文件路径
                         opts.FileUploaded(file,info,o,up);
+                    },
+
+                    /**
+                     * 当上传队列中所有文件都上传完成后触发监听函数
+                     * @param up
+                     * @param file
+                     * @constructor
+                     */
+                    UploadComplete:function (up,file) {
+                        opts.UploadComplete(file,o,up);
                     },
 
                     Error: function(up, err) {

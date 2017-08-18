@@ -29,7 +29,7 @@
     $('#selectfiles').swalupload({
         postButton:'#postfiles',
         rename:false,
-        multi:false,
+        multi:true,
         FilesAdded:function (file,sel,up) {
             $('#ossfile').append('<div id="' + file.id + '">' + file.name + ' (' + file.ratio + ')<b></b>'
                 + '<div class="progress"><div class="progress-bar" style="width: 0%"></div></div>'
@@ -52,6 +52,9 @@
             {
                 document.getElementById(file.id).getElementsByTagName('b')[0].innerHTML = info.response;
             }
+        },
+        UploadComplete:function (files,sel,up) {
+            console.log('上传完成');
         },
         Error:function (msg,sel,up) {
             console.log(msg);
