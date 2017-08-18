@@ -54,6 +54,9 @@
                 document.getElementById(file.id).getElementsByTagName('b')[0].innerHTML = info.response;
             }
         },
+        UploadComplete:function (files,sel,up) {
+			console.log('111');
+        },
         Error:function (msg,sel,up) {
             alert(msg);
         }

@@ -320,7 +320,9 @@
                      * @constructor
                      */
                     UploadComplete:function (up,file) {
-                        opts.UploadComplete(file,o,up);
+                        if(file.length>0){//上传文件数必须大于0
+                            opts.UploadComplete(file,o,up);
+                        }
                     },
 
                     Error: function(up, err) {
