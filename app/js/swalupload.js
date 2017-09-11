@@ -249,7 +249,7 @@
                    { title : "Zip files", extensions : "zip,rar" }
                ],
                max_file_size : opts.maxfilesize, //最大只能上传10mb的文件
-               prevent_duplicates : true //不允许选取重复文件
+               prevent_duplicates : typeof opts.duplicates!='undefined'?opts.duplicates:false //不允许选取重复文件,默认可以添加重复文件
         	},
         	userAgent = navigator.userAgent; //取得浏览器的userAgent字符串
         if (userAgent.indexOf("Chrome") > -1){
