@@ -243,35 +243,20 @@
         if(opts.serverSignUrl!=''){
             server_sign_url = opts.serverSignUrl; //获取签名地址
         }
-        var filters = {//充许上传的文件
-        		mime_types : [ //只允许上传图片和zip,rar文件
-                   { title : "Image files", extensions : "jpg,gif,png,bmp" },
-                   { title : "Zip files", extensions : "zip,rar" }
-               ],
-               max_file_size : opts.maxfilesize, //最大只能上传10mb的文件
-               prevent_duplicates : typeof opts.duplicates!='undefined'?opts.duplicates:false //不允许选取重复文件,默认可以添加重复文件
-        	},
-        	userAgent = navigator.userAgent; //取得浏览器的userAgent字符串
-        if (userAgent.indexOf("Chrome") > -1){
-        	//因为谷歌浏览器选择文件慢，所以只能放开文件类型选择
-        	filters.mime_types = [];
-		}else{
-			filters.mime_types = [ //只允许上传图片和zip,rar文件
-				{ title : "Image files", extensions : "jpg,gif,png,bmp" },
-				{ title : "Zip files", extensions : "zip,rar" }
-			];
-		}
+        //上传文件过滤规则
+        opts = require('./filters')(opts);
+
         //批处理多个文件上传按钮
         $(this).each(function (i,o) {
             var uploader = new plupload.Uploader({
                 runtimes: 'html5,flash,silverlight,html4', //运行环境
-                multi_selection: opts.multi, //是否可以同时上传多个文件,默认为单文件上传
+                multi_selection: typeof opts.multi, //是否可以同时上传多个文件,默认为单文件上传
                 browse_button:$(o)[0], //上传按钮
                 container: $(me).parent()[0], //上传容器
                 url: 'http://oss.aliyuncs.com', //提交的url,
                 flash_swf_url: opts.flash, //flash的路径
                 silverlight_xap_url: opts.silverlight,//silver的路径
-                filters: filters, //文件过滤规则
+                filters: opts.filters, //文件过滤规则
                 init: {
                     PostInit: function() {
                         if(opts.postButton != null){
@@ -326,7 +311,7 @@
 
                     Error: function(up, err) {
                         if (err.code == -600) {
-                            opts.Error("选择的文件超过了"+opts.maxfilesize,o,up);
+                            opts.Error("选择的文件超过了"+opts.filters.max_file_size,o,up);
                         }
                         else if (err.code == -601) {
                             opts.Error("不能上传该类型的文件",o,up);

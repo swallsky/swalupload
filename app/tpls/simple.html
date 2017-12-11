@@ -30,6 +30,11 @@
         postButton:'#postfiles',
         rename:false,
         multi:true,
+        filters:{
+            mime_types : [ //只允许上传图片和zip,rar文件
+                { title : "Image files", extensions : "png" }
+            ]
+        },
         FilesAdded:function (file,sel,up) {
             $('#ossfile').append('<div id="' + file.id + '">' + file.name + ' (' + file.ratio + ')<b></b>'
                 + '<div class="progress"><div class="progress-bar" style="width: 0%"></div></div>'
