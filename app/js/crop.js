@@ -34,7 +34,7 @@ exports.set = function (data) {
     if(typeof data != 'undefined'){
         for(var i in options){
             if(typeof data[i] != 'undefined'){
-                options[i] = data[i]
+                options[i] = Math.floor(data[i])
             }
         }
     }

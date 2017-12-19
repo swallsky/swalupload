@@ -13,10 +13,10 @@
 <body>
 <div id="container">
     <a id="selectfiles" href="javascript:void(0);" class='btn'>选择文件</a>
-    <buttton class="btn" id="cutsave">裁剪</buttton>
+    <!--<buttton class="btn" id="cutsave">裁剪</buttton>-->
     <a id="postfiles" href="javascript:void(0);" class='btn'>开始上传</a>
 </div>
-<div id="console"></div>
+<div id="ossviewfile"></div>
 <h1>文件裁剪并上传</h1>
 <div>
     <div style="float: left; width:400px;">
@@ -57,6 +57,11 @@
                     console.log(e.rotate);
                     console.log(e.scaleX);
                     console.log(e.scaleY);*/
+                    var croppedCanvas = $('#cropper-imgs').cropper('getCroppedCanvas');
+                    $('#cropperviewimge').html('<img src="' + croppedCanvas.toDataURL() + '" />');
+
+                    var imcrop = $('#cropper-imgs').cropper('getData');
+                    uploader.setCrop(imcrop);
                 }
             });
         },
@@ -71,11 +76,12 @@
         FileUploaded:function (file,info,sel,up) {
             if (info.status == 200)
             {
-                document.getElementById(file.id).getElementsByTagName('b')[0].innerHTML = 'upload to oss success, object name:' + file.name;
+                $('#'+file.id).html('upload to oss success, object name:' + file.name);
+                $('#ossviewfile').html('<img src="'+uploader.osshost+'" />');
             }
             else
             {
-                document.getElementById(file.id).getElementsByTagName('b')[0].innerHTML = info.response;
+                $('#'+file.id).html(info.response);
             }
         },
         UploadComplete:function (files,sel,up) {
