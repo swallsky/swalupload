@@ -10,6 +10,7 @@ SwalUpload是在[Plupload](http://www.plupload.com)插件基础上做的上传�
 * 在head中加入
 ```html
     <script src="../app/js/jquery-2.2.4.js"></script>
+    <script src="../plupload/js/plupload.full.min.js"></script>
     <script type="text/javascript" src="../dist/swalupload.js"></script>
 ```
 * 以单文件上传为例

@@ -50,7 +50,13 @@ if(process.env.NODE_ENV == 'development') {//开发环境
             filename:builddir+'/batch.html',
             template:appdir+'/tpls/batch.html',
             inject:false //不让自动注入
-        })
+        }),
+        new HtmlWebpackPlugin({
+            title:'剪切完成后再上传',
+            filename:builddir+'/cropper.html',
+            template:appdir+'/tpls/cropper.html',
+            inject:false //不让自动注入
+        }),
     ];
 }else{//生产环境
     //输出文件

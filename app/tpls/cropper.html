@@ -4,42 +4,61 @@
     <meta charset="UTF-8">
     <title><%= htmlWebpackPlugin.options.title %></title>
     <link rel="stylesheet" type="text/css" href="../app/css/style.css"/>
+    <link rel="stylesheet" type="text/css" href="../node_modules/cropper/dist/cropper.min.css"/>
     <script src="../app/js/jquery-2.2.4.js"></script>
     <script src="../plupload/js/plupload.full.min.js"></script>
+    <script src="../node_modules/cropper/dist/cropper.min.js"></script>
     <script type="text/javascript" src="<%= htmlWebpackPlugin.files.chunks.swalupload.entry %>"></script>
 </head>
 <body>
-<h1>单文件上传</h1>
-<h4>您所选择的文件列表：</h4>
-<div id="ossfile">
-    <!-- 文件显示 -->
-</div>
-
-<br/>
-
-
 <div id="container">
     <a id="selectfiles" href="javascript:void(0);" class='btn'>选择文件</a>
+    <buttton class="btn" id="cutsave">裁剪</buttton>
     <a id="postfiles" href="javascript:void(0);" class='btn'>开始上传</a>
 </div>
-
-<pre id="console"></pre>
-
-<p>&nbsp;</p>
+<div id="console"></div>
+<h1>文件裁剪并上传</h1>
+<div>
+    <div style="float: left; width:400px;">
+        <div id="picurls"></div>
+        <div id="ossfile">
+            <!-- 文件显示 -->
+        </div>
+    </div>
+    <div style="float: left;width:200px;">
+        <div id="cropperviewimge"></div>
+    </div>
+</div>
+<br/>
 <script>
-    $('#selectfiles').swalupload({
+    var uploader = $('#selectfiles').swalupload({
         postButton:'#postfiles',
         rename:false,
-        multi:true,
+        multi:false,
         filters:{
             mime_types : [ //只允许上传图片和zip,rar文件
-                { title : "Image files", extensions : "png" }
+                { title : "Image files", extensions : "jpg,png,gif" }
             ]
         },
         FilesAdded:function (file,sel,up) {
             $('#ossfile').append('<div id="' + file.id + '">' + file.name + ' (' + file.ratio + ')<b></b>'
                 + '<div class="progress"><div class="progress-bar" style="width: 0%"></div></div>'
                 + '</div>');
+            $('#picurls').append('<img id="cropper-imgs" src="' + file.previewdata + '" width="300" height="300" />');
+
+            $('#cropper-imgs').cropper({
+                aspectRatio: 1 / 1,
+                crop: function(e) {
+                    // Output the result data for cropping image.
+                    /*console.log(e.x);
+                    console.log(e.y);
+                    console.log(e.width);
+                    console.log(e.height);
+                    console.log(e.rotate);
+                    console.log(e.scaleX);
+                    console.log(e.scaleY);*/
+                }
+            });
         },
         UploadProgress:function (file,sel,up) {
             var d = document.getElementById(file.id);
@@ -65,6 +84,14 @@
         Error:function (msg,sel,up) {
             console.log(msg);
         }
+    });
+
+    $('#cutsave').click(function () {
+        var croppedCanvas = $('#cropper-imgs').cropper('getCroppedCanvas');
+        $('#cropperviewimge').html('<img src="' + croppedCanvas.toDataURL() + '" />');
+
+        var imcrop = $('#cropper-imgs').cropper('getData');
+        uploader.setCrop(imcrop);
     });
 </script>
 </body>

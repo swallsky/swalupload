@@ -2,9 +2,15 @@
  * @author swallsky <xjz1688@163.com>
  * @version 0.9
  */
-(function ($) {
-    //载入plupload
-    var plupload = require('plupload');
+(function ($,plupload) {
+    /**
+     * 预览连接
+     */
+    var previewdata = require('./previewdata');
+    /**
+     * 裁剪参数处理
+     */
+    var cropParas = require('./crop');
     /**
      * 基础配置参数
      * @type {string}
@@ -274,7 +280,16 @@
                         plupload.each(files, function(file) {
                             file.ext = get_suffix(file.name).substring(1);//文件后缀名
                             file.ratio = plupload.formatSize(file.size); //转换后的大小显示
-                            opts.FilesAdded(file,o,up);
+                            //得到预览图片信息
+                            if($.inArray(file.ext.toLowerCase(),['jpg','png','gif']) == -1){//非图片
+                                file.previewdata = ''; //图片预览地址
+                                opts.FilesAdded(file,o,up);
+                            }else{//图片预览数据
+                                previewdata(file,function (imgsrc) {
+                                    file.previewdata = imgsrc;
+                                    opts.FilesAdded(file,o,up);
+                                });
+                            }
                         });
                         //当没有上传按钮时 自动上传文件
                         if(opts.postButton == null){
@@ -293,8 +308,9 @@
 
                     FileUploaded: function(up, file, info) {
                         file.ext = get_suffix(file.name).substring(1);//文件后缀名
-                        file.path = get_uploaded_object_name(file.name); //上传后的文件路径
+                        file.path = get_uploaded_object_name(file.name)+cropParas.get(); //上传后的文件路径
                         opts.FileUploaded(file,info,o,up);
+                        cropParas.clear(); //图片裁剪参数
                     },
 
                     /**
@@ -306,6 +322,7 @@
                     UploadComplete:function (up,file) {
                         if(file.length>0){//上传文件数必须大于0
                             opts.UploadComplete(file,o,up);
+                            cropParas.clear(); //图片裁剪参数
                         }
                     },
 
@@ -328,6 +345,35 @@
             });
             uploader.init();
         });
+        /**
+         * 公共函数
+         */
+        return {
+            /**
+             * 设置裁剪参数
+             * @param data
+             * width: 指定裁剪宽度
+             * height: 指定裁剪高度
+             * x: 指定裁剪起点横坐标（默认左上角为原点）
+             * y: 指定裁剪起点纵坐标（默认左上角为原点）
+             */
+            setCrop:function (data) {
+                cropParas.set(data);
+            },
+            /**
+             * 获取参数参数
+             * @returns {string}
+             */
+            getCrop:function () {
+                return cropParas.get();
+            },
+            /**
+             * 清空裁剪参数
+             */
+            clearCrop:function () {
+                cropParas.clear();
+            }
+        }
     };
 
-})(jQuery);
+})(jQuery,plupload);
