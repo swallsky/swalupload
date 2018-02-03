@@ -150,10 +150,11 @@
      * @param up
      * @param filename
      * @param ret
+     * @param opts 公有属性
      */
-    function set_upload_param(up, filename, ret,serverUrl)
+    function set_upload_param(up, filename, ret,opts)
     {
-        if(serverUrl == ossServerUrl){//如果等于ossurl，需要签名提交参数等
+        if(opts.serverUrl == ossServerUrl){//如果等于ossurl，需要签名提交参数等
             if (ret == false)
             {
                 ret = get_signature();
@@ -177,6 +178,11 @@
                 'multipart_params': new_multipart_params
             });
         }
+        if(opts.postData != ''){//有额外提交的参数
+            up.setOption({
+                'multipart_params': opts.postData
+            });
+        }
 
 
         up.start();
@@ -197,6 +203,7 @@
             postButton:null, //提交按钮
             multi:false, //是否充许重复
             serverSaveUrl:ossServerUrl, //提交远程url,默认为oss
+            postData:'', //需要提交的数据，默认为空
             /**
              * 当文件添加到上传队列后触发监听函数
              * @param file 文件
@@ -271,11 +278,11 @@
                     PostInit: function() {
                         if(opts.postButton != null){
                             $(opts.postButton).click(function () {
-                                set_upload_param(uploader, '', false,opts.serverSaveUrl);
+                                set_upload_param(uploader, '', false,opts);
                                 return false;
                             });
                         }else{
-                        	set_upload_param(uploader, '', false,opts.serverSaveUrl);
+                        	set_upload_param(uploader, '', false,opts);
                         }
                     },
 
@@ -297,13 +304,13 @@
                         });
                         //当没有上传按钮时 自动上传文件
                         if(opts.postButton == null){
-                        	set_upload_param(uploader, '', false,opts.serverSaveUrl);
+                        	set_upload_param(uploader, '', false,opts);
                         }
                     },
 
                     BeforeUpload: function(up, file) {
                         check_object_radio(opts.rename);
-                        set_upload_param(up, file.name, true,opts.serverSaveUrl);
+                        set_upload_param(up, file.name, true,opts);
                     },
 
                     UploadProgress: function(up, file) {
