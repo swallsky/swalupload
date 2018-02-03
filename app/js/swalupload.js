@@ -26,7 +26,8 @@
         g_object_name = '',
         g_object_name_type = '',
         server_sign_url = '../php/config.php', //远程服务端签名url
-        now = timestamp = Date.parse(new Date()) / 1000;
+        now = timestamp = Date.parse(new Date()) / 1000,
+        ossServerUrl = 'http://oss.aliyuncs.com'; //OSS远程提交地址
     /**
      * 远程读取policy
      * @returns {String|null|string}
@@ -150,30 +151,33 @@
      * @param filename
      * @param ret
      */
-    function set_upload_param(up, filename, ret)
+    function set_upload_param(up, filename, ret,serverUrl)
     {
-        if (ret == false)
-        {
-            ret = get_signature();
-        }
-        g_object_name = key;
-        if (filename != '') {
-            suffix = get_suffix(filename);
-            calculate_object_name(filename);
-        }
-        new_multipart_params = {
-            'key' : g_object_name,
-            'policy': policyBase64,
-            'OSSAccessKeyId': accessid,
-            'success_action_status' : '200', //让服务端返回200,不然，默认会返回204
-            'callback' : callbackbody,
-            'signature': signature,
-        };
+        if(serverUrl == ossServerUrl){//如果等于ossurl，需要签名提交参数等
+            if (ret == false)
+            {
+                ret = get_signature();
+            }
+            g_object_name = key;
+            if (filename != '') {
+                suffix = get_suffix(filename);
+                calculate_object_name(filename);
+            }
+            new_multipart_params = {
+                'key' : g_object_name,
+                'policy': policyBase64,
+                'OSSAccessKeyId': accessid,
+                'success_action_status' : '200', //让服务端返回200,不然，默认会返回204
+                'callback' : callbackbody,
+                'signature': signature,
+            };
 
-        up.setOption({
-            'url': host,
-            'multipart_params': new_multipart_params
-        });
+            up.setOption({
+                'url': host,
+                'multipart_params': new_multipart_params
+            });
+        }
+
 
         up.start();
     };
@@ -192,6 +196,7 @@
             maxfilesize:'10mb', //充许上传的最大文件
             postButton:null, //提交按钮
             multi:false, //是否充许重复
+            serverSaveUrl:ossServerUrl, //提交远程url,默认为oss
             /**
              * 当文件添加到上传队列后触发监听函数
              * @param file 文件
@@ -251,15 +256,14 @@
         }
         //上传文件过滤规则
         opts = require('./filters')(opts);
-
         //批处理多个文件上传按钮
         $(this).each(function (i,o) {
             var uploader = new plupload.Uploader({
                 runtimes: 'html5,flash,silverlight,html4', //运行环境
-                multi_selection: typeof opts.multi, //是否可以同时上传多个文件,默认为单文件上传
+                multi_selection: opts.multi == true?false:true, //是否可以同时上传多个文件,默认为单文件上传
                 browse_button:$(o)[0], //上传按钮
                 container: $(me).parent()[0], //上传容器
-                url: 'http://oss.aliyuncs.com', //提交的url,
+                url: opts.serverSaveUrl, //提交的url,
                 flash_swf_url: opts.flash, //flash的路径
                 silverlight_xap_url: opts.silverlight,//silver的路径
                 filters: opts.filters, //文件过滤规则
@@ -267,11 +271,11 @@
                     PostInit: function() {
                         if(opts.postButton != null){
                             $(opts.postButton).click(function () {
-                                set_upload_param(uploader, '', false);
+                                set_upload_param(uploader, '', false,opts.serverSaveUrl);
                                 return false;
                             });
                         }else{
-                        	set_upload_param(uploader, '', false);
+                        	set_upload_param(uploader, '', false,opts.serverSaveUrl);
                         }
                     },
 
@@ -293,13 +297,13 @@
                         });
                         //当没有上传按钮时 自动上传文件
                         if(opts.postButton == null){
-                        	set_upload_param(uploader, '', false);
+                        	set_upload_param(uploader, '', false,opts.serverSaveUrl);
                         }
                     },
 
                     BeforeUpload: function(up, file) {
                         check_object_radio(opts.rename);
-                        set_upload_param(up, file.name, true);
+                        set_upload_param(up, file.name, true,opts.serverSaveUrl);
                     },
 
                     UploadProgress: function(up, file) {
@@ -307,8 +311,14 @@
                     },
 
                     FileUploaded: function(up, file, info) {
-                        file.ext = get_suffix(file.name).substring(1);//文件后缀名
-                        file.path = get_uploaded_object_name(file.name)+cropParas.get(); //上传后的文件路径
+                        if(ossServerUrl == opts.serverSaveUrl){//上传到OSS时的处理
+                            file.ext = get_suffix(file.name).substring(1);//文件后缀名
+                            file.path = get_uploaded_object_name(file.name)+cropParas.get(); //上传后的文件路径
+                        }else{
+                            var data = eval('('+info.response+')');
+                            file.name = data.name;
+                            file.path = data.path;
+                        }
                         opts.FileUploaded(file,info,o,up);
                         cropParas.clear(); //图片裁剪参数
                     },

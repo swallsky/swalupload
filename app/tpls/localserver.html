@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title><%= htmlWebpackPlugin.options.title %></title>
+    <link rel="stylesheet" type="text/css" href="../app/css/style.css"/>
+    <script src="../app/js/jquery-2.2.4.js"></script>
+    <script src="../plupload/js/plupload.full.min.js"></script>
+    <script type="text/javascript" src="<%= htmlWebpackPlugin.files.chunks.swalupload.entry %>"></script>
+</head>
+<body>
+<h1>本地单文件上传</h1>
+<h4>您所选择的文件列表：</h4>
+<div id="ossfile">
+    <!-- 文件显示 -->
+</div>
+
+<br/>
+
+
+<div id="container">
+    <a id="selectfiles" href="javascript:void(0);" class='btn'>选择文件</a>
+    <a id="postfiles" href="javascript:void(0);" class='btn'>开始上传</a>
+</div>
+
+<div id="localimg"></div>
+
+<p>&nbsp;</p>
+<script>
+    $('#selectfiles').swalupload({
+        postButton:'#postfiles',
+        rename:true,
+        multi:false,
+        serverSaveUrl:'http://localhost/alioss/php/server.php', //提交到本地存储
+        filters:{
+            mime_types : [ //只允许上传图片和zip,rar文件
+                { title : "Image files", extensions : "png,jpg" }
+            ]
+        },
+        FilesAdded:function (file,sel,up) {
+            $('#ossfile').append('<div id="' + file.id + '">' + file.name + ' (' + file.ratio + ')<b></b>'
+                + '<div class="progress"><div class="progress-bar" style="width: 0%"></div></div>'
+                + '</div>');
+        },
+        UploadProgress:function (file,sel,up) {
+            var d = document.getElementById(file.id);
+            d.getElementsByTagName('b')[0].innerHTML = '<span>' + file.percent + "%</span>";
+            var prog = d.getElementsByTagName('div')[0];
+            var progBar = prog.getElementsByTagName('div')[0]
+            progBar.style.width= 2*file.percent+'px';
+            progBar.setAttribute('aria-valuenow',file.percent);
+        },
+        FileUploaded:function (file,info,sel,up) {
+            if (info.status == 200)
+            {
+                $('#localimg').html('<img src="'+file.path+'">');
+            }
+            else
+            {
+                document.getElementById(file.id).getElementsByTagName('b')[0].innerHTML = info.response;
+            }
+        },
+        UploadComplete:function (files,sel,up) {
+            console.log('上传完成');
+        },
+        Error:function (msg,sel,up) {
+            console.log(msg);
+        }
+    });
+</script>
+</body>
+</html>

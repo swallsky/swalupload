@@ -40,6 +40,12 @@ if(process.env.NODE_ENV == 'development') {//开发环境
             inject:false //不让自动注入
         }),
         new HtmlWebpackPlugin({
+            title:'本地存储方案',
+            filename:builddir+'/localserver.html',
+            template:appdir+'/tpls/localserver.html',
+            inject:false //不让自动注入
+        }),
+        new HtmlWebpackPlugin({
             title:'多文件上传',
             filename:builddir+'/list.html',
             template:appdir+'/tpls/list.html',
